@@ -4,7 +4,6 @@ from api.routers import (
     system_router,
 )
 
-
 app = FastAPI(title="File manager app.", version="0.1.0")
 
 app.add_middleware(

@@ -1,13 +1,13 @@
 import os
+
 from pydantic import (
     PostgresDsn,
     computed_field,
 )
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-
 current_dir = os.path.dirname(__file__)
-env_path = os.path.join(current_dir, '..', '.env')
+env_path = os.path.join(current_dir, "..", ".env")
 
 
 class Settings(BaseSettings):
