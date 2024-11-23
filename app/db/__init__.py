@@ -1,6 +1,6 @@
-from .base import Base, get_async_session
+from .base import Base, async_session_maker
 
-# __all__ = [
-#     'Base',
-#     'get_async_session',
-# ]
+__all__ = [
+    "Base",
+    "async_session_maker",
+]
