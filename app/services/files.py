@@ -7,7 +7,7 @@ from fastapi import HTTPException, UploadFile
 from app.storage import IStorage
 from app.utils import UploadTo
 from app.uow import IUoW
-from app.schemas.file import FileUpload
+from app.schemas.file import FileData, FileUpload
 from .interfaces.files import IFilesService
 
 
@@ -29,6 +29,20 @@ class FilesService(IFilesService):
         filename = uploaded_file.filename
 
         return await self._save_to_db(uow, path, filename, content_type, size)
+
+    async def get_link(self, uow: IUoW, storage: IStorage, uuid: uuid.UUID) -> FileData:
+        async with uow:
+            item = await uow.files.get_by_uuid(uuid)
+            if item is not None and (await storage.exists(item.path)):
+                return FileData(
+                    filename=item.original_name,
+                    link=storage.get_absolute_path(item.path),
+                )
+
+        raise HTTPException(
+            status_code=404,
+            detail="File not found",
+        )
 
     async def save_to_storage(
         self, storage: IStorage, uploaded_file: UploadFile

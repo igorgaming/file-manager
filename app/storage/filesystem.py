@@ -1,7 +1,7 @@
 import os
 
 from aiofiles import open
-from aiofiles.os import makedirs, remove
+from aiofiles.os import makedirs, remove, stat
 from fastapi import UploadFile
 
 from app.conf import settings
@@ -17,6 +17,16 @@ class FileSystemStorage(IStorage):
     @property
     def location(self) -> str:
         return os.path.abspath(self._base_dir)
+
+    def get_absolute_path(self, path: str) -> str:
+        return os.path.join(self.location, path)
+
+    async def exists(self, path: str) -> bool:
+        try:
+            await stat(self.get_absolute_path(path))
+        except (OSError, ValueError):
+            return False
+        return True
 
     async def save_file(self, file: UploadFile, save_to: str) -> str:
         path = self._get_path(save_to)

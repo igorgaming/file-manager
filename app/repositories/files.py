@@ -1,6 +1,8 @@
 from typing import Optional
 from uuid import UUID
 
+from sqlalchemy import select
+
 from app.models import File
 from .sqlalchemy import SQLAlchemyRepository
 from .interfaces.files import IFilesRepository
@@ -25,6 +27,10 @@ class FilesRepository(SQLAlchemyRepository, IFilesRepository):
 
         self._session.add(new_file)
         return new_file
+
+    async def get_by_uuid(self, uuid: UUID) -> Optional[File]:
+        query = select(File).where(File.uuid == uuid)
+        return (await self._session.scalars(query)).first()
 
     def _get_original_name(self, filename: Optional[str]) -> str:
         if filename is None:

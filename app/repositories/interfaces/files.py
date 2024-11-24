@@ -1,6 +1,7 @@
-from typing import Any, Optional, Protocol
-
+from typing import Optional, Protocol
 from uuid import UUID
+
+from app.models import File
 
 
 class IFilesRepository(Protocol):
@@ -11,4 +12,6 @@ class IFilesRepository(Protocol):
         filename: Optional[str],
         content_type: Optional[str],
         size: Optional[str],
-    ) -> Any: ...
+    ) -> File: ...
+
+    async def get_by_uuid(self, uuid: UUID) -> Optional[File]: ...
