@@ -4,7 +4,11 @@ import uuid
 
 from fastapi import HTTPException, UploadFile
 
+from app.cloud.cloud_client import get_cloud_client
+from app.cloud.cloud_service import get_cloud_service
+from app.cloud.exceptions import BaseCloudException
 from app.storage import IStorage
+from app.storage.cloud import get_cloud_storage
 from app.utils import UploadTo
 from app.uow import IUoW
 from app.schemas.file import FileData, FileUpload
@@ -22,7 +26,7 @@ class FilesService(IFilesService):
     async def save(
         self, uow: IUoW, storage: IStorage, uploaded_file: UploadFile
     ) -> FileUpload:
-        path = await self.save_to_storage(storage, uploaded_file)
+        path = await self._save_to_storage(storage, uploaded_file)
 
         size = str(uploaded_file.size)
         content_type = uploaded_file.content_type
@@ -44,7 +48,19 @@ class FilesService(IFilesService):
             detail="File not found",
         )
 
-    async def save_to_storage(
+    async def get_backup_task(self, uploaded_file: UploadFile) -> None:
+        try:
+            async with await get_cloud_client() as client:
+                service = await get_cloud_service(client)
+                storage = await get_cloud_storage(service)
+                await storage.save(
+                    uploaded_file, self._get_files_dir(uploaded_file.filename)
+                )
+        except BaseCloudException:
+            logger.exception("Error writing to cloud storage")
+            raise
+
+    async def _save_to_storage(
         self, storage: IStorage, uploaded_file: UploadFile
     ) -> str:
         try:

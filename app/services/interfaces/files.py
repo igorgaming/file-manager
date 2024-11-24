@@ -11,6 +11,24 @@ from app.schemas.file import FileData, FileUpload
 class IFilesService(Protocol):
     async def save(
         self, uow: IUoW, storage: IStorage, uploaded_file: UploadFile
-    ) -> FileUpload: ...
+    ) -> FileUpload:
+        """Save the file.
 
-    async def get_link(self, uow: IUoW, storage: IStorage, uuid: UUID) -> FileData: ...
+        Args:
+            uow (IUoW): UoW
+            storage (IStorage): File storage.
+            uploaded_file (UploadFile): Uploaded file.
+
+        Returns:
+            FileUpload: Uploaded file.
+        """
+
+    async def get_link(self, uow: IUoW, storage: IStorage, uuid: UUID) -> FileData:
+        """Get link of the file by UUID."""
+
+    async def get_backup_task(self, uploaded_file: UploadFile) -> None:
+        """Get backup async task.
+
+        Args:
+            uploaded_file (UploadFile): Uploaded file.
+        """
