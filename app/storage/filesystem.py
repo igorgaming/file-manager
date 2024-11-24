@@ -1,7 +1,7 @@
 import os
 
 from aiofiles import open
-from aiofiles.os import makedirs
+from aiofiles.os import makedirs, remove
 from fastapi import UploadFile
 
 from app.conf import settings
@@ -9,6 +9,8 @@ from .interfaces.storage import IStorage
 
 
 class FileSystemStorage(IStorage):
+    CHUNK_SIZE = 1024 * 1024 * 100  # 100 MB
+
     def __init__(self, base_dir: str) -> None:
         self._base_dir = base_dir
 
@@ -20,16 +22,18 @@ class FileSystemStorage(IStorage):
         path = self._get_path(save_to)
 
         await self._create_dirs(path)
-        await self._write_file(path, await file.read())
+
+        async with open(path, mode="wb") as new_file:
+            while chunk := await file.read(size=self.CHUNK_SIZE):
+                await new_file.write(chunk)
 
         return save_to
 
+    async def delete(self, path: str) -> None:
+        await remove(self._get_path(path))
+
     async def _create_dirs(self, path: str) -> None:
         await makedirs(os.path.dirname(path), exist_ok=True)
-
-    async def _write_file(self, path: str, data: bytes) -> None:
-        async with open(path, mode="wb") as new_file:
-            await new_file.write(data)
 
     def _get_path(self, path: str) -> str:
         return os.path.join(self.location, path)

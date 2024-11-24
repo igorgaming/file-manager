@@ -14,7 +14,7 @@ router = APIRouter(prefix="/files", tags=["Files"])
 @router.post(
     "/upload",
     status_code=status.HTTP_201_CREATED,
-    summary="File upload (w/o streaming)",
+    summary="File upload (also supports streaming requests)",
 )
 async def upload(
     uow: Annotated[IUoW, Depends(get_uow)],
