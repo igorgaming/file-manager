@@ -12,6 +12,8 @@ class IFilesRepository(Protocol):
         filename: Optional[str],
         content_type: Optional[str],
         size: Optional[str],
-    ) -> File: ...
+    ) -> File:
+        """Save the given file metadata."""
 
-    async def get_by_uuid(self, uuid: UUID) -> Optional[File]: ...
+    async def get_by_uuid(self, uuid: UUID) -> Optional[File]:
+        """Get the file metadata by UUID."""

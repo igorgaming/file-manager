@@ -5,10 +5,47 @@ from fastapi import UploadFile
 
 class IStorage(Protocol):
     @property
-    def location(self) -> str: ...
+    def location(self) -> str:
+        """Get the base directory.
 
-    def get_absolute_path(self, path: str) -> str: ...
+        Returns:
+            str: Path to the base directory.
+        """
 
-    async def exists(self, path: str) -> bool: ...
+    def get_absolute_path(self, path: str) -> str:
+        """Get absolute path.
 
-    async def save_file(self, file: UploadFile, save_to: str) -> str: ...
+        Args:
+            path (str): Path to file.
+
+        Returns:
+            str: Returns absolute path to the file.
+        """
+
+    async def exists(self, path: str) -> bool:
+        """Check if file with given path exists.
+
+        Args:
+            path (str): Path to file.
+
+        Returns:
+            bool: Returns `True` if file exists.
+        """
+
+    async def save(self, file: UploadFile, save_to: str) -> str:
+        """Save `UploadedFile` to storage.
+
+        Args:
+            file (UploadFile): Uploaded file.
+            save_to (str): Path to save the file.
+
+        Returns:
+            str: Path to file.
+        """
+
+    async def delete(self, path: str) -> None:
+        """Delete file from storage.
+
+        Args:
+            path (str): Path to file.
+        """

@@ -48,7 +48,7 @@ class FilesService(IFilesService):
         self, storage: IStorage, uploaded_file: UploadFile
     ) -> str:
         try:
-            path = await storage.save_file(
+            path = await storage.save(
                 uploaded_file, self._get_files_dir(uploaded_file.filename)
             )
             return path

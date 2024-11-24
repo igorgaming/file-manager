@@ -9,6 +9,11 @@ from .interfaces.storage import IStorage
 
 
 class FileSystemStorage(IStorage):
+    """File system storage implementation.
+
+    This storage is used to manage files in local filesystem.
+    """
+
     CHUNK_SIZE = 1024 * 1024 * 100  # 100 MB
 
     def __init__(self, base_dir: str) -> None:
@@ -28,7 +33,7 @@ class FileSystemStorage(IStorage):
             return False
         return True
 
-    async def save_file(self, file: UploadFile, save_to: str) -> str:
+    async def save(self, file: UploadFile, save_to: str) -> str:
         path = self._get_path(save_to)
 
         await self._create_dirs(path)
