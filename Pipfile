@@ -6,15 +6,17 @@ name = "pypi"
 [packages]
 fastapi = {extras = ["standard"], version = "~=0.115"}
 pydantic = "~=2.10"
-alembic = "~=1.14"
-sqlalchemy = {extras = ["mypy"], version = "~=2.0"}
+alembic = "~=1.14.0"
+sqlalchemy = {extras = ["mypy"], version = "~=2.0.36"}
 pydantic-settings = "~=2.6"
 asyncpg = "~=0.30"
+aiofiles = "~=24.1.0"
 
 [dev-packages]
 ruff = "~=0.8"
 pre-commit = "~=4.0"
 mypy = "~=1.13"
+types-aiofiles = "~=24.1.0"
 
 [requires]
 python_version = "3.12"
