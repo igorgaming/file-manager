@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.routers import (
     system_router,
+    file_router,
 )
 from app.conf import settings
 
@@ -17,3 +18,4 @@ app.add_middleware(
 )
 
 app.include_router(system_router)
+app.include_router(file_router)

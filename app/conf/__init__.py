@@ -1,8 +1,11 @@
+import logging.config as log_conf
+
 from pydantic_settings import SettingsConfigDict
 
 from .app import ENV_PATH, AppSettings
 from .database import DatabaseSettings
 from .security import SecuritySettings
+from .logging import logging_config
 
 
 class Settings(
@@ -16,3 +19,5 @@ class Settings(
 
 
 settings = Settings()
+
+log_conf.dictConfig(logging_config)
