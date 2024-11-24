@@ -9,6 +9,7 @@ file-manager
 │   ├── api               # Contains configuration of the app
 │   │   ├── dependencies  # FastAPI deps
 │   │   └── routers       # All api-routers
+│   ├── cloud             # PoC for cloud storage
 │   ├── conf              # Contains configuration of the app
 │   ├── db
 │   │   └── base.py       # Database-related stuff

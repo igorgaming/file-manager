@@ -5,6 +5,7 @@ from pydantic_settings import SettingsConfigDict
 from .app import ENV_PATH, AppSettings
 from .database import DatabaseSettings
 from .security import SecuritySettings
+from .storage import StorageSettings
 from .logging import logging_config
 
 
@@ -12,6 +13,7 @@ class Settings(
     AppSettings,
     DatabaseSettings,
     SecuritySettings,
+    StorageSettings,
 ):
     """App configuration with support for loading values from `.env`."""
 

@@ -1,7 +1,7 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Path, UploadFile, status
+from fastapi import APIRouter, BackgroundTasks, Depends, Path, UploadFile, status
 from fastapi.responses import FileResponse
 
 from app.uow import IUoW
@@ -19,12 +19,16 @@ router = APIRouter(prefix="/files", tags=["Files"])
     summary="File upload (also supports streaming requests)",
 )
 async def upload(
+    bg_task: BackgroundTasks,
     uow: Annotated[IUoW, Depends(get_uow)],
     service: Annotated[IFilesService, Depends(get_files_service)],
     filestorage: Annotated[FileSystemStorage, Depends(get_filesystem_storage)],
     file: UploadFile,
 ) -> FileUpload:
     file_data = await service.save(uow, filestorage, file)
+
+    bg_task.add_task(service.get_backup_task, uploaded_file=file)
+
     return file_data
 
 
