@@ -1,7 +1,7 @@
 from typing import Optional
 import logging
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from fastapi import HTTPException, UploadFile
 
@@ -13,6 +13,7 @@ from app.storage.cloud import get_cloud_storage
 from app.utils import UploadTo
 from app.uow import IUoW
 from app.schemas.file import FileData, FileUpload
+from app.conf import settings
 from .interfaces.files import IFilesService
 
 
@@ -51,6 +52,9 @@ class FilesService(IFilesService):
 
     async def get_backup_task(self, uploaded_file: UploadFile) -> None:
         try:
+            # This is a background task, so we cant rely on FastAPI DI injector,
+            # we must resolve them manually.
+            # See https://fastapi.tiangolo.com/tutorial/dependencies/dependencies-with-yield/#background-tasks-and-dependencies-with-yield-technical-details
             async with await get_cloud_client() as client:
                 service = await get_cloud_service(client)
                 storage = await get_cloud_storage(service)
@@ -61,11 +65,11 @@ class FilesService(IFilesService):
             logger.exception("Error writing to cloud storage")
             raise
 
-    async def clean_old_files(
-        self, uow: IUoW, storage: IStorage, date: datetime
-    ) -> None:
+    async def clean_old_files(self, uow: IUoW, storage: IStorage) -> None:
+        before_date = datetime.now() - timedelta(days=settings.DELETE_FILES_IN_DAYS)
+
         async with uow:
-            items = await uow.files.delete_before_date(date)
+            items = await uow.files.delete_before_date(before_date)
 
             for item in items:
                 await storage.delete(item.link)
