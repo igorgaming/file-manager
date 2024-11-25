@@ -6,13 +6,13 @@ Simple FastAPI app for files management
 ```
 file-manager
 ├── app
-│   ├── api               # Contains configuration of the app
-│   │   ├── dependencies  # FastAPI deps
+│   ├── api               # Api-related stuff
 │   │   └── routers       # All api-routers
 │   ├── cloud             # PoC for cloud storage
 │   ├── conf              # Contains configuration of the app
 │   ├── db
 │   │   └── base.py       # Database-related stuff
+|   ├── dependencies      # All DI dependencies
 |   ├── migrations        # Alembic migrations
 │   ├── models            # Contains all models
 │   │   └── mixins        # Model mixins
@@ -20,6 +20,7 @@ file-manager
 │   ├── schemas           # Pydantic schemas
 │   ├── services          # Services layer
 │   ├── storage           # Different storages impl
+│   ├── tasks             # Background tasks and scheduler
 │   ├── uow               # UoW impl
 │   ├── main.py           # FastAPI Entrypoint
 │   └── utils.py          # Some utilities

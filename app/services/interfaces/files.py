@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import Protocol
 from uuid import UUID
 
@@ -34,13 +33,10 @@ class IFilesService(Protocol):
             uploaded_file (UploadFile): Uploaded file.
         """
 
-    async def clean_old_files(
-        self, uow: IUoW, storage: IStorage, date: datetime
-    ) -> None:
+    async def clean_old_files(self, uow: IUoW, storage: IStorage) -> None:
         """Clean old files from db and storage.
 
         Args:
             uow (IUoW): UoW
             storage (IStorage): File storage.
-            date (datetime): Date to delete files before.
         """

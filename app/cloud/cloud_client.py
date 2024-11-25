@@ -1,10 +1,10 @@
-from contextlib import contextmanager
 from typing import Any, Optional, Self
 from types import TracebackType
+from contextlib import contextmanager
 from http import HTTPStatus
+
 import aiohttp
 
-from app.conf import settings
 from .exceptions import InternalError, InvalidApiKey, NotFound, ClientError
 
 
@@ -27,11 +27,33 @@ class CloudClient:
         await self._close_connection()
 
     async def get(self, url: str, params: Optional[dict] = None) -> dict:
+        """
+        Send an asynchronous GET request to the specified URL.
+
+        Args:
+            url (str): The URL.
+            params (Optional[dict]): Query parameters.
+
+        Returns:
+            dict: The JSON response from the server.
+        """
+
         with self._ensure_ok():
             async with self._connection.get(url, params=params) as response:
                 return await response.json()
 
     async def post(self, url: str, data: Any = None) -> dict:
+        """
+        Send an POST request to the specified URL.
+
+        Args:
+            url (str): The URL.
+            data (Any): Data.
+
+        Returns:
+            dict: The JSON response from the server.
+        """
+
         with self._ensure_ok():
             async with self._connection.post(url, data=data) as response:
                 return await response.json()
@@ -59,7 +81,3 @@ class CloudClient:
 
     async def _close_connection(self) -> None:
         await self._connection.close()
-
-
-async def get_cloud_client() -> CloudClient:
-    return CloudClient(settings.CLOUD_API_URL, settings.CLOUD_API_TOKEN)

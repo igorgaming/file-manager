@@ -4,11 +4,15 @@ from uuid import UUID
 from fastapi import APIRouter, BackgroundTasks, Depends, Path, UploadFile, status
 from fastapi.responses import FileResponse
 
-from app.uow import IUoW
-from app.services import IFilesService
 from app.schemas.file import FileUpload
-from app.storage.filesystem import FileSystemStorage, get_filesystem_storage
-from ..dependencies import get_uow, get_files_service
+from app.dependencies import (
+    IUoW,
+    IStorage,
+    IFilesService,
+    get_uow,
+    get_files_service,
+    get_filesystem_storage,
+)
 
 router = APIRouter(prefix="/files", tags=["Files"])
 
@@ -22,7 +26,7 @@ async def upload(
     bg_task: BackgroundTasks,
     uow: Annotated[IUoW, Depends(get_uow)],
     service: Annotated[IFilesService, Depends(get_files_service)],
-    filestorage: Annotated[FileSystemStorage, Depends(get_filesystem_storage)],
+    filestorage: Annotated[IStorage, Depends(get_filesystem_storage)],
     file: UploadFile,
 ) -> FileUpload:
     file_data = await service.save(uow, filestorage, file)
@@ -36,7 +40,7 @@ async def upload(
 async def download(
     uow: Annotated[IUoW, Depends(get_uow)],
     service: Annotated[IFilesService, Depends(get_files_service)],
-    filestorage: Annotated[FileSystemStorage, Depends(get_filesystem_storage)],
+    filestorage: Annotated[IStorage, Depends(get_filesystem_storage)],
     uuid: Annotated[UUID, Path()],
 ) -> FileResponse:
     file_data = await service.get_link(uow, filestorage, uuid)
