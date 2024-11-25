@@ -1,10 +1,9 @@
 from typing import BinaryIO
 
-from app.conf import settings
 from .cloud_client import CloudClient
 
 
-class CloudService:
+class Cloud:
     def __init__(self, client: CloudClient, location: str) -> None:
         self._client = client
         self._location = location
@@ -25,7 +24,3 @@ class CloudService:
 
     def get_link(self, path: str) -> str:
         return f"{self.location}{path}"
-
-
-async def get_cloud_service(client: CloudClient) -> CloudService:
-    return CloudService(client, settings.CLOUD_URL)

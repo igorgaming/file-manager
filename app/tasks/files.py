@@ -1,9 +1,11 @@
 import logging
 
-from app.api.dependencies.db import get_async_session_maker
-from app.api.dependencies.uow import get_uow
-from app.api.dependencies.files import get_files_service
-from app.storage.filesystem import get_filesystem_storage
+from app.dependencies import (
+    get_async_session_maker,
+    get_uow,
+    get_files_service,
+    get_filesystem_storage,
+)
 from .scheduler import scheduler
 
 logger = logging.getLogger(__name__)

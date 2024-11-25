@@ -1,10 +1,10 @@
-from contextlib import contextmanager
 from typing import Any, Optional, Self
 from types import TracebackType
+from contextlib import contextmanager
 from http import HTTPStatus
+
 import aiohttp
 
-from app.conf import settings
 from .exceptions import InternalError, InvalidApiKey, NotFound, ClientError
 
 
@@ -59,7 +59,3 @@ class CloudClient:
 
     async def _close_connection(self) -> None:
         await self._connection.close()
-
-
-async def get_cloud_client() -> CloudClient:
-    return CloudClient(settings.CLOUD_API_URL, settings.CLOUD_API_TOKEN)

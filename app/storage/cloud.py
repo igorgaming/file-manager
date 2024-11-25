@@ -2,7 +2,7 @@ import os
 
 from fastapi import UploadFile
 
-from app.cloud.cloud_service import CloudService
+from app.cloud.cloud import Cloud
 from .interfaces.storage import IStorage
 
 
@@ -14,8 +14,8 @@ class CloudStorage(IStorage):
     Its just PoC and not connected to a real service.
     """
 
-    def __init__(self, cloud_service: CloudService) -> None:
-        self._cloud = cloud_service
+    def __init__(self, cloud: Cloud) -> None:
+        self._cloud = cloud
 
     @property
     def location(self) -> str:
@@ -33,7 +33,3 @@ class CloudStorage(IStorage):
 
     async def delete(self, path: str) -> None:
         await self._cloud.delete_file(path)
-
-
-async def get_cloud_storage(cloud: CloudService) -> IStorage:
-    return CloudStorage(cloud)

@@ -4,7 +4,6 @@ from aiofiles import open
 from aiofiles.os import makedirs, remove, stat
 from fastapi import UploadFile
 
-from app.conf import settings
 from .interfaces.storage import IStorage
 
 
@@ -55,7 +54,3 @@ class FileSystemStorage(IStorage):
 
     def _get_path(self, path: str) -> str:
         return os.path.join(self.location, path)
-
-
-async def get_filesystem_storage() -> FileSystemStorage:
-    return FileSystemStorage(settings.APP_UPLOAD_DIR)
