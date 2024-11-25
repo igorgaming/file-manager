@@ -66,6 +66,18 @@ file-manager
 /file-manager/app$> fastapi dev main.py
 ```
 
+7. Enjoy!
+
+## Running tests
+
+PostgreSQL container will be created with two databases: `db` (main) and `tests` (for testing).
+You can run tests using `pytest` framework:
+
+```shell
+/file-manager$> cd tests/
+/file-manager/tests$> pytest
+```
+
 ## Useful links
 
 - http://127.0.0.1:8000/docs - Swagger UI

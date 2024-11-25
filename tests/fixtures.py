@@ -50,8 +50,13 @@ class FakeCloudClient:
 @pytest_asyncio.fixture
 async def fake_storage(app: FastAPI):
     storage = FakeStorage()
+
     app.dependency_overrides[get_filesystem_storage] = lambda: storage
-    return storage
+
+    try:
+        yield storage
+    finally:
+        del app.dependency_overrides[get_filesystem_storage]
 
 
 @pytest_asyncio.fixture
