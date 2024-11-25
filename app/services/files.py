@@ -1,6 +1,7 @@
 from typing import Optional
 import logging
 import uuid
+from datetime import datetime
 
 from fastapi import HTTPException, UploadFile
 
@@ -59,6 +60,17 @@ class FilesService(IFilesService):
         except BaseCloudException:
             logger.exception("Error writing to cloud storage")
             raise
+
+    async def clean_old_files(
+        self, uow: IUoW, storage: IStorage, date: datetime
+    ) -> None:
+        async with uow:
+            items = await uow.files.delete_before_date(date)
+
+            for item in items:
+                await storage.delete(item.link)
+
+            await uow.commit()
 
     async def _save_to_storage(
         self, storage: IStorage, uploaded_file: UploadFile

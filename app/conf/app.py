@@ -14,4 +14,8 @@ class AppSettings(BaseSettings):
     APP_TITLE: str = "File manager app"
     APP_VERSION: str = "0.1.0"
 
-    APP_UPLOAD_DIR: str = os.path.join(APP_BASE_DIR, "..", "uploads")
+    APP_UPLOAD_DIR: str = os.path.join(
+        APP_BASE_DIR, "..", "uploads"
+    )  # Directory for uploaded files
+
+    DELETE_FILES_IN_DAYS: int = 7  # Delete files older than this many days

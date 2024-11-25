@@ -5,6 +5,7 @@ from app.api.routers import (
     file_router,
 )
 from app.conf import settings
+from .tasks import scheduler
 
 app = FastAPI(title=settings.APP_TITLE, version=settings.APP_VERSION)
 
@@ -19,3 +20,5 @@ app.add_middleware(
 
 app.include_router(system_router)
 app.include_router(file_router)
+
+scheduler.start()
