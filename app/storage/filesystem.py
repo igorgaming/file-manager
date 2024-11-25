@@ -57,5 +57,5 @@ class FileSystemStorage(IStorage):
         return os.path.join(self.location, path)
 
 
-def get_filesystem_storage() -> FileSystemStorage:
+async def get_filesystem_storage() -> FileSystemStorage:
     return FileSystemStorage(settings.APP_UPLOAD_DIR)
