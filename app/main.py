@@ -1,5 +1,9 @@
+import logging
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from app.api.routers import (
     system_router,
     file_router,
@@ -7,7 +11,22 @@ from app.api.routers import (
 from app.conf import settings
 from .tasks import scheduler
 
-app = FastAPI(title=settings.APP_TITLE, version=settings.APP_VERSION)
+
+logger = logging.getLogger(__name__)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    try:
+        scheduler.start()
+        yield
+    except Exception:
+        logger.exception("Error starting scheduler")
+    finally:
+        scheduler.shutdown()
+
+
+app = FastAPI(lifespan=lifespan, title=settings.APP_TITLE, version=settings.APP_VERSION)
 
 app.add_middleware(
     CORSMiddleware,
@@ -20,5 +39,3 @@ app.add_middleware(
 
 app.include_router(system_router)
 app.include_router(file_router)
-
-scheduler.start()
