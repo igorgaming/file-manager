@@ -45,7 +45,10 @@ class FileSystemStorage(IStorage):
         return save_to
 
     async def delete(self, path: str) -> None:
-        await remove(self._get_path(path))
+        try:
+            await remove(self._get_path(path))
+        except OSError:
+            pass
 
     async def _create_dirs(self, path: str) -> None:
         await makedirs(os.path.dirname(path), exist_ok=True)

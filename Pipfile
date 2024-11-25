@@ -12,6 +12,7 @@ pydantic-settings = "~=2.6"
 asyncpg = "~=0.30"
 aiofiles = "~=24.1.0"
 aiohttp = "~=3.11"
+apscheduler = "~=3.11.0"
 
 [dev-packages]
 ruff = "~=0.8"
