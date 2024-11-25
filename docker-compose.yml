@@ -10,3 +10,4 @@ services:
     volumes:
       - ./postgresql/dumps:/code/dumps
       - ./postgresql/data:/var/lib/postgresql/data
+      - ./db_init.sql:/docker-entrypoint-initdb.d/init.sql
