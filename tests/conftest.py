@@ -21,6 +21,7 @@ async def init_db():
     """Init database."""
 
     async with engine.begin() as connection:
+        # Create all tables.
         await connection.run_sync(Base.metadata.create_all)
         await connection.commit()
 
@@ -42,12 +43,16 @@ async def db() -> AsyncGenerator[AsyncSession, None]:
 
     async with engine.begin() as connection:
         session = async_session_maker(bind=connection)
-        session.begin_nested()  # SAVEPOINT
+
+        # We are making a nested Savepoint here so that after the end of the one test
+        # we can roll back all the changes that were made in it to make
+        # the new test work with a clean database.
+        session.begin_nested()
 
         @event.listens_for(session.sync_session, "after_transaction_end")
         def restart_savepoint(session, transaction):
             """
-            Each time that SAVEPOINT ends, reopen it
+            Each time that Savepoint ends, reopen it
             """
 
             if transaction.nested and not transaction._parent.nested:
