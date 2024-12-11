@@ -1,5 +1,8 @@
 # file-manager
-Simple FastAPI app for files management
+
+Simple FastAPI app for files management.
+
+This app is PoC for UoW and Repository patterns. This patterns most likely overhead for such simple microservices.
 
 ## Project structure
 
